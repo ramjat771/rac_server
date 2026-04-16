@@ -19,7 +19,7 @@ export const createVcApplyRepo = async (data) => {
 
 // 📥 Get all
 export const getAllVcApplyRepo = async () => {
-  return await VcApply.find().sort({ createdAt: -1 });
+  return await VcApply.find().sort({ createdAt: -1 }).populate("userId");
 };
 
 // 🔍 Get by ID
@@ -27,13 +27,20 @@ export const getVcApplyByIdRepo = async (id) => {
   return await VcApply.findOne({ vcId: id });
 };
 
-// 🔄 Update Status + Schedule + Remark
+// 🆕 Get by ForwardTo
+export const getVcByForwardToRepo = async (forwardTo) => {
+  return await VcApply.find({ forwardTo }).sort({ createdAt: -1 });
+};
+
+// 🔄 Update Status + Schedule + Remark + Link + Forward
 export const updateVcStatusRepo = async (
   id,
   status,
   officerRemark,
   vcDate,
-  vcTime
+  vcTime,
+  vcLink,
+  forwardTo
 ) => {
   return await VcApply.findOneAndUpdate(
     { vcId: id },
@@ -42,7 +49,16 @@ export const updateVcStatusRepo = async (
       officerRemark,
       vcDate,
       vcTime,
+      vcLink,
+      forwardTo,
     },
     { new: true }
   );
 };
+// 🔍 Get by UserId
+export const getVcByUserIdRepo = async (userId) => {
+  return await VcApply.find({ userId })
+    .sort({ createdAt: -1 })
+    .populate("userId"); // 👈 user details
+};
+

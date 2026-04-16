@@ -21,20 +21,29 @@ export const getVcApplyById = async (id) => {
   return await vcRepo.getVcApplyByIdRepo(id);
 };
 
-// 🔄 Update Status + Tipanni + Date/Time
+// 🆕 Get by ForwardTo
+export const getVcByForwardTo = async (forwardTo) => {
+  return await vcRepo.getVcByForwardToRepo(forwardTo);
+};
+
+// 🔄 Update
 export const updateVcStatus = async (
   id,
   status,
   officerRemark,
   vcDate,
-  vcTime
+  vcTime,
+  vcLink,
+  forwardTo
 ) => {
   const updated = await vcRepo.updateVcStatusRepo(
     id,
     status,
     officerRemark,
     vcDate,
-    vcTime
+    vcTime,
+    vcLink,
+    forwardTo
   );
 
   return {
@@ -43,3 +52,10 @@ export const updateVcStatus = async (
     data: updated,
   };
 };
+
+
+// 🆕 Get by UserId
+export const getVcByUserId = async (userId) => {
+  return await vcRepo.getVcByUserIdRepo(userId);
+};
+

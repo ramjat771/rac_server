@@ -7,7 +7,7 @@ const router = Router();
 
 // 📂 Upload config
 const uploadFields = upload.fields([
-  { name: "document", maxCount: 1 },
+  { name: "upload", maxCount: 1 },
 ]);
 
 // 🚀 CREATE
@@ -26,5 +26,13 @@ router.get("/:id", vcController.getVcApplyByIdController);
 
 // 🔄 UPDATE (status + tipanni + schedule)
 router.patch("/:id/status", vcController.updateVcStatusController);
+
+
+// 🆕 GET BY USER ID
+router.get("/user/:userId", vcController.getVcByUserIdController);
+
+// 🆕 GET BY FORWARD TO
+router.get("/forward/:forwardTo", vcController.getVcByForwardToController);
+
 
 export default router;

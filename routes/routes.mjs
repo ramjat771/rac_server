@@ -6,6 +6,6 @@ import vc from "./vc_apply.routes.mjs"
 const router = Router();
 router.use("/user",userRoutes)
 router.use("/request",request)
-router.use("/vc",request)
+router.use("/vc",vc)
 
 export default router;
