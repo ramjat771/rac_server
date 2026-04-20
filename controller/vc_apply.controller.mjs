@@ -50,17 +50,27 @@ export const getVcByForwardToController = async (req, res, next) => {
 // 🔄 Update
 export const updateVcStatusController = async (req, res, next) => {
   try {
-    const { status, officerRemark, vcDate, vcTime, vcLink, forwardTo } =
-      req.body;
+    const allowedFields = [
+      "status",
+      "officerRemark",
+      "vcDate",
+      "vcTime",
+      "vcLink",
+      "forwardTo",
+    ];
+
+    // 🧠 only send defined fields
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
 
     const result = await vcService.updateVcStatus(
       Number(req.params.id),
-      status,
-      officerRemark,
-      vcDate,
-      vcTime,
-      vcLink,
-      forwardTo
+      updateData
     );
 
     return successResponse(res, result.data, result.message);

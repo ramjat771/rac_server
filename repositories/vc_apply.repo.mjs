@@ -29,29 +29,14 @@ export const getVcApplyByIdRepo = async (id) => {
 
 // 🆕 Get by ForwardTo
 export const getVcByForwardToRepo = async (forwardTo) => {
-  return await VcApply.find({ forwardTo }).sort({ createdAt: -1 });
+  return await VcApply.find({ forwardTo }).sort({ createdAt: -1 }).populate("userId");
 };
 
 // 🔄 Update Status + Schedule + Remark + Link + Forward
-export const updateVcStatusRepo = async (
-  id,
-  status,
-  officerRemark,
-  vcDate,
-  vcTime,
-  vcLink,
-  forwardTo
-) => {
+export const updateVcStatusRepo = async (id, updateData) => {
   return await VcApply.findOneAndUpdate(
     { vcId: id },
-    {
-      status,
-      officerRemark,
-      vcDate,
-      vcTime,
-      vcLink,
-      forwardTo,
-    },
+    { $set: updateData },
     { new: true }
   );
 };

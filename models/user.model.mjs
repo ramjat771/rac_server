@@ -8,9 +8,10 @@ const userSchema = new mongoose.Schema(
     belt_number: { type: String, required: true },
     battalion_name: { type: String, required: true },
     company: { type: String, required: true },
-
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true },
+    postId:{type: Number ,default:1},
+    btId:{type: Number ,default:0},
   },
   { timestamps: true }
 );

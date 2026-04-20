@@ -27,24 +27,8 @@ export const getVcByForwardTo = async (forwardTo) => {
 };
 
 // 🔄 Update
-export const updateVcStatus = async (
-  id,
-  status,
-  officerRemark,
-  vcDate,
-  vcTime,
-  vcLink,
-  forwardTo
-) => {
-  const updated = await vcRepo.updateVcStatusRepo(
-    id,
-    status,
-    officerRemark,
-    vcDate,
-    vcTime,
-    vcLink,
-    forwardTo
-  );
+export const updateVcStatus = async (id, data) => {
+  const updated = await vcRepo.updateVcStatusRepo(id, data);
 
   return {
     success: true,
