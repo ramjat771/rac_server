@@ -3,9 +3,13 @@ const users = new Map();       // username → socketId
 const sockets = new Map();     // socketId → username
 export function initSocket(server) {
   const io = new Server(server, {
+    path: "/socket",
     cors: {
-      origin: "*",
-    },
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  }
+
   });
 
   io.on("connection", (socket) => {
