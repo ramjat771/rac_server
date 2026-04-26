@@ -57,6 +57,8 @@ export const updateVcStatusController = async (req, res, next) => {
       "vcTime",
       "vcLink",
       "forwardTo",
+      "inAppCall",
+      "apvlEmail"
     ];
 
     // 🧠 only send defined fields

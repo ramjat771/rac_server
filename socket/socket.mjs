@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
-
-const users = new Map(); // username → socketId
-
+const users = new Map();       // username → socketId
+const sockets = new Map();     // socketId → username
 export function initSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -12,18 +11,61 @@ export function initSocket(server) {
   io.on("connection", (socket) => {
     console.log("🟢 Connected:", socket.id);
 
-    /// 🔐 Register
-    socket.on("register", (username) => {
-      users.set(username, socket.id);
-      console.log("👤 Registered:", username);
+    // ✅ Get username from AUTH or QUERY
+    const username =
+      socket.handshake.auth?.username ||
+      socket.handshake.query?.username;
+
+    if (!username) {
+      console.log("❌ No username provided");
+      socket.disconnect();
+      return;
+    }
+
+    // ✅ Store user
+    users.set(username, socket.id);
+    sockets.set(socket.id, username);
+
+    console.log("👤 Registered:", username);
+
+/// MESSAGE
+    socket.on("msg", (data) => {
+      const targetSocket = users.get(data.target);
+
+      if (targetSocket) {
+        io.to(targetSocket).emit("msg", {
+          ...data,
+          from: username,
+        });
+                console.log("Found target",data);
+
+      } else {
+        console.log("❌ Target not found:", data);
+          
+
+  socket.emit("msg", {
+      ...data,
+      subtype: "noTarget",
+      message: "User not available",
+      from: username,
     });
+
+
+      }
+    });
+
 
     /// 📞 OFFER
     socket.on("offer", (data) => {
       const targetSocket = users.get(data.target);
 
       if (targetSocket) {
-        io.to(targetSocket).emit("offer", data);
+        io.to(targetSocket).emit("offer", {
+          ...data,
+          from: username,
+        });
+                console.log("Found target",data);
+
       } else {
         console.log("❌ Target not found:", data.target);
       }
@@ -34,7 +76,10 @@ export function initSocket(server) {
       const targetSocket = users.get(data.target);
 
       if (targetSocket) {
-        io.to(targetSocket).emit("answer", data);
+        io.to(targetSocket).emit("answer", {
+          ...data,
+          from: username,
+        });
       }
     });
 
@@ -43,7 +88,10 @@ export function initSocket(server) {
       const targetSocket = users.get(data.target);
 
       if (targetSocket) {
-        io.to(targetSocket).emit("ice", data);
+        io.to(targetSocket).emit("ice", {
+          ...data,
+          from: username,
+        });
       }
     });
 
@@ -51,12 +99,12 @@ export function initSocket(server) {
     socket.on("disconnect", () => {
       console.log("🔴 Disconnected:", socket.id);
 
-      for (const [user, id] of users.entries()) {
-        if (id === socket.id) {
-          users.delete(user);
-          console.log("❌ Removed:", user);
-          break;
-        }
+      const user = sockets.get(socket.id);
+
+      if (user) {
+        users.delete(user);
+        sockets.delete(socket.id);
+        console.log("❌ Removed:", user);
       }
     });
   });

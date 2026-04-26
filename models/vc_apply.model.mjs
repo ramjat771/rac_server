@@ -10,7 +10,8 @@ const vcApplySchema = new mongoose.Schema(
     vcTime: { type: String, default: null },
     
     upload: { type: String },
-
+    inAppCall: { type: Boolean, default: false },
+    
     // 🆕 VC Link
     vcLink: { type: String, default: null },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
@@ -20,6 +21,8 @@ const vcApplySchema = new mongoose.Schema(
 
     // 🆕 Officer Remark
     officerRemark: { type: String, default: null },
+    
+    apvlEmail: { type: String, default: null },
 
     status: {
       type: String,
